@@ -1,12 +1,13 @@
-import { Mesh, Program, Texture } from '@bizarro/slayt/libraries/ogl'
+import { Mesh, Program, Texture } from 'ogl'
 
-import { App, Scroll, getBounds } from '@bizarro/slayt'
+import { getBounds } from '../utils/DOM'
 
-import fragment from '../../shaders/text-fragment.glsl'
-import vertex from '../../shaders/text-vertex.glsl'
+import fragment from '../shaders/text-fragment.glsl'
+import vertex from '../shaders/text-vertex.glsl'
 
 export class Text {
-  constructor({ element, geometry, scene }) {
+  constructor({ canvas, element, geometry, scene }) {
+    this.canvas = canvas
     this.element = element
     this.geometry = geometry
     this.scene = scene
@@ -15,11 +16,11 @@ export class Text {
 
     this.bounds = getBounds(this.element)
 
-    const canvas = document.createElement('canvas')
-    const context = canvas.getContext('2d')
+    const canvas2 = document.createElement('canvas')
+    const context = canvas2.getContext('2d')
 
-    canvas.height = this.bounds.height
-    canvas.width = this.bounds.width
+    canvas2.height = this.bounds.height
+    canvas2.width = this.bounds.width
 
     let text = this.element.textContent.trim().replace(/  /g, '').replace(/<br>/g, '')
 
@@ -43,7 +44,7 @@ export class Text {
       context.fillText(lines[i], 0, (i * lineSpacing).toFixed(2))
     }
 
-    this.createImage(canvas)
+    this.createImage(canvas2)
   }
 
   createImage(canvas) {
@@ -57,11 +58,11 @@ export class Text {
   }
 
   createMesh(image) {
-    const texture = new Texture(App.canvas.gl)
+    const texture = new Texture(this.canvas.gl)
 
     texture.image = image
 
-    const program = new Program(App.canvas.gl, {
+    const program = new Program(this.canvas.gl, {
       fragment,
       uniforms: {
         tMap: { value: texture },
@@ -76,7 +77,7 @@ export class Text {
       vertex,
     })
 
-    this.mesh = new Mesh(App.canvas.gl, {
+    this.mesh = new Mesh(this.canvas.gl, {
       geometry: this.geometry,
       program,
     })
@@ -88,7 +89,7 @@ export class Text {
     this.bounds = getBounds(this.element)
   }
 
-  onLoop() {
+  onLoop(scroll) {
     if (!this.bounds) return
     if (!this.mesh) return
 
@@ -107,17 +108,17 @@ export class Text {
 
     this.mesh.program.uniforms.uResolution.value = [this.mesh.scale.x, this.mesh.scale.y, a1, a2]
 
-    this.mesh.scale.x = (App.canvas.sizes.x * this.bounds.width) / App.canvas.viewport.x
-    this.mesh.scale.y = (App.canvas.sizes.y * this.bounds.height) / App.canvas.viewport.y
+    this.mesh.scale.x = (this.canvas.sizes.x * this.bounds.width) / this.canvas.viewport.x
+    this.mesh.scale.y = (this.canvas.sizes.y * this.bounds.height) / this.canvas.viewport.y
 
     const x = this.bounds.left
-    const y = this.bounds.top - Scroll.lenis.scroll
+    const y = this.bounds.top - scroll
 
-    const xFix = -(App.canvas.sizes.x / 2) + this.mesh.scale.x / 2
-    const yFix = App.canvas.sizes.y / 2 - this.mesh.scale.y / 2
+    const xFix = -(this.canvas.sizes.x / 2) + this.mesh.scale.x / 2
+    const yFix = this.canvas.sizes.y / 2 - this.mesh.scale.y / 2
 
-    this.mesh.position.x = xFix + (x / App.canvas.viewport.x) * App.canvas.sizes.x
-    this.mesh.position.y = yFix - (y / App.canvas.viewport.y) * App.canvas.sizes.y
+    this.mesh.position.x = xFix + (x / this.canvas.viewport.x) * this.canvas.sizes.x
+    this.mesh.position.y = yFix - (y / this.canvas.viewport.y) * this.canvas.sizes.y
   }
 
   destroy() {

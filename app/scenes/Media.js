@@ -1,12 +1,13 @@
-import { Mesh, Program, Texture } from '@bizarro/slayt/libraries/ogl'
+import { Mesh, Program, Texture } from 'ogl'
 
-import { App, Scroll, getBounds } from '@bizarro/slayt'
+import { getBounds } from '../utils/DOM'
 
-import fragment from '../../shaders/media-fragment.glsl'
-import vertex from '../../shaders/media-vertex.glsl'
+import fragment from '../shaders/media-fragment.glsl'
+import vertex from '../shaders/media-vertex.glsl'
 
 export class Media {
-  constructor({ element, geometry, scene }) {
+  constructor({ canvas, element, geometry, scene }) {
+    this.canvas = canvas
     this.element = element
     this.geometry = geometry
     this.scene = scene
@@ -18,7 +19,7 @@ export class Media {
   }
 
   createTexture() {
-    this.texture = new Texture(App.canvas.gl)
+    this.texture = new Texture(this.canvas.gl)
 
     this.element.src = this.element.dataset.glMedia
 
@@ -46,7 +47,7 @@ export class Media {
   }
 
   createMesh() {
-    this.program = new Program(App.canvas.gl, {
+    this.program = new Program(this.canvas.gl, {
       fragment,
       uniforms: {
         tMap: { value: this.texture },
@@ -62,7 +63,7 @@ export class Media {
       transparent: true,
     })
 
-    this.mesh = new Mesh(App.canvas.gl, {
+    this.mesh = new Mesh(this.canvas.gl, {
       geometry: this.geometry,
       program: this.program,
     })
@@ -77,7 +78,7 @@ export class Media {
     this.bounds = getBounds(this.element)
   }
 
-  onLoop() {
+  onLoop(scroll) {
     if (!this.bounds) return
     if (!this.mesh) return
 
@@ -104,17 +105,17 @@ export class Media {
 
     this.mesh.program.uniforms.uResolution.value = [this.mesh.scale.x, this.mesh.scale.y, a1, a2]
 
-    this.mesh.scale.x = (App.canvas.sizes.x * this.bounds.width) / App.canvas.viewport.x
-    this.mesh.scale.y = (App.canvas.sizes.y * this.bounds.height) / App.canvas.viewport.y
+    this.mesh.scale.x = (this.canvas.sizes.x * this.bounds.width) / this.canvas.viewport.x
+    this.mesh.scale.y = (this.canvas.sizes.y * this.bounds.height) / this.canvas.viewport.y
 
     const x = this.bounds.left
-    const y = this.bounds.top - Scroll.lenis.scroll
+    const y = this.bounds.top - scroll
 
-    const xFix = -(App.canvas.sizes.x / 2) + this.mesh.scale.x / 2
-    const yFix = App.canvas.sizes.y / 2 - this.mesh.scale.y / 2
+    const xFix = -(this.canvas.sizes.x / 2) + this.mesh.scale.x / 2
+    const yFix = this.canvas.sizes.y / 2 - this.mesh.scale.y / 2
 
-    this.mesh.position.x = xFix + (x / App.canvas.viewport.x) * App.canvas.sizes.x
-    this.mesh.position.y = yFix - (y / App.canvas.viewport.y) * App.canvas.sizes.y
+    this.mesh.position.x = xFix + (x / this.canvas.viewport.x) * this.canvas.sizes.x
+    this.mesh.position.y = yFix - (y / this.canvas.viewport.y) * this.canvas.sizes.y
   }
 
   destroy() {

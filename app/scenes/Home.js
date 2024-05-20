@@ -1,31 +1,34 @@
-import { Plane } from '@bizarro/slayt/libraries/ogl'
+import { Plane, Transform } from 'ogl'
 
-import { App, Scene } from '@bizarro/slayt'
+import { Media } from './Media'
+import { Text } from './Text'
 
-import { Media } from './Home/Media'
-import { Text } from './Home/Text'
+export class Home extends Transform {
+  constructor({ canvas, page }) {
+    super()
 
-export class Home extends Scene {
-  create() {
-    super.create()
+    this.canvas = canvas
+    this.page = page
 
-    const geometry = new Plane(App.canvas.gl, {
+    const geometry = new Plane(this.canvas.gl, {
       heightSegments: 1,
       widthSegments: 1,
     })
 
-    this.medias = App.page.elements.medias.map(
+    this.medias = this.page.elements.medias.map(
       (element) =>
         new Media({
+          canvas: this.canvas,
           element,
           geometry,
           scene: this,
         }),
     )
 
-    this.texts = App.page.elements.texts.map(
+    this.texts = this.page.elements.texts.map(
       (element) =>
         new Text({
+          canvas: this.canvas,
           element,
           geometry,
           scene: this,
@@ -38,9 +41,9 @@ export class Home extends Scene {
     this.texts?.forEach((text) => text.onResize())
   }
 
-  onLoop() {
-    this.medias?.forEach((media) => media.onLoop())
-    this.texts?.forEach((text) => text.onLoop())
+  onLoop(scroll) {
+    this.medias?.forEach((media) => media.onLoop(scroll))
+    this.texts?.forEach((text) => text.onLoop(scroll))
   }
 
   destroy() {

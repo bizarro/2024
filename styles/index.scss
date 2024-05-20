@@ -1,6 +1,9 @@
-@import '../node_modules/@bizarro/slayt/styles/index';
+@import './base/reset';
 
+@import './utils/lenis';
+@import './utils/mixins';
 @import './utils/variables';
+@import './utils/responsive';
 
 @import './base/base';
 @import './base/fonts';

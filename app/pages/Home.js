@@ -1,12 +1,8 @@
-import GSAP from '@bizarro/slayt/libraries/gsap'
+import { Component } from '../classes/Component'
 
-import { Page } from '@bizarro/slayt'
-
-export class Home extends Page {
-  constructor(args) {
+export class Home extends Component {
+  constructor() {
     super({
-      ...args,
-      classes: {},
       element: '.home',
       elements: {
         wrapper: '.home__wrapper',
@@ -18,60 +14,5 @@ export class Home extends Page {
         texts: '[data-gl-text]',
       },
     })
-  }
-
-  show({ from, to } = {}) {
-    this.timelineIn = GSAP.timeline({
-      paused: true,
-    })
-
-    if (from) {
-      this.timelineIn.fromTo(
-        this.element,
-        {
-          autoAlpha: 1,
-          y: '100%',
-        },
-        {
-          autoAlpha: 1,
-          duration: 1.5,
-          ease: 'expo.inOut',
-          y: '0%',
-        },
-      )
-    } else {
-      this.timelineIn.to(this.element, {
-        autoAlpha: 1,
-        duration: 0.001,
-        y: '0%',
-      })
-    }
-
-    this.timelineIn.call(() => {
-      GSAP.delayedCall(1, () => {
-        this.isVisible = true
-      })
-    })
-
-    return super.show(this.timelineIn)
-  }
-
-  hide() {
-    this.timelineOut = GSAP.timeline({
-      paused: true,
-    })
-
-    this.timelineOut.to(this.element, {
-      autoAlpha: 0,
-      duration: 1.5,
-      ease: 'expo.inOut',
-      scale: 0.9,
-    })
-
-    this.timelineOut.call(() => {
-      this.isVisible = false
-    })
-
-    return super.hide(this.timelineOut)
   }
 }
