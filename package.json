@@ -1,0 +1,39 @@
+{
+  "name": "bizarro",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "concurrently --kill-others \"npm run frontend:development\" \"npm run backend:development\"",
+    "backend:development": "nodemon index.js",
+    "backend:production": "node index.js",
+    "frontend:development": "rollup -c -w --bundleConfigAsCjs",
+    "frontend:production": "rollup -c --bundleConfigAsCjs",
+    "postinstall": "npm run frontend:production"
+  },
+  "dependencies": {
+    "@rollup/plugin-commonjs": "^25.0.4",
+    "@rollup/plugin-node-resolve": "^15.1.0",
+    "@rollup/plugin-replace": "^5.0.5",
+    "@rollup/plugin-terser": "^0.4.3",
+    "autoprefixer": "^10.4.14",
+    "concurrently": "^8.2.0",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "include-media": "^2.0.0",
+    "mobx": "^6.12.3",
+    "node-fetch": "^2.7.0",
+    "nodemailer": "^6.9.5",
+    "nodemon": "^3.0.1",
+    "postcss": "^8.4.26",
+    "prismic-dom": "^2.2.7",
+    "rollup": "^3.26.3",
+    "rollup-plugin-browsersync": "^1.3.3",
+    "rollup-plugin-copy": "^3.4.0",
+    "rollup-plugin-glslify": "^1.3.1",
+    "rollup-plugin-scss": "^4.0.0",
+    "rollup-plugin-svg-icons": "^2.1.2",
+    "sass": "^1.63.6",
+    "twig": "^1.17.1",
+    "ua-parser-js": "^1.0.35"
+  }
+}

@@ -1,0 +1,70 @@
+.about {
+  margin: 2.5rem;
+}
+
+.about__introduction {
+  font-size: 6rem;
+  letter-spacing: -0.25rem;
+  padding-right: 0.25rem;
+
+  p {
+    margin-top: 1em;
+  }
+}
+
+.about__content {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10rem;
+}
+
+.about__content__column {
+  width: calc(50% - 2.5rem);
+}
+
+.about__information {
+  display: flex;
+  justify-content: space-between;
+  font-size: 2.4rem;
+  letter-spacing: -0.1rem;
+  line-height: 1.2;
+  padding-right: 0.1rem;
+}
+
+.about__information__column {
+  width: 33.33%;
+}
+
+.about__information__link {
+}
+
+.about__media {
+  aspect-ratio: 1;
+  display: block;
+  position: relative;
+  width: 100%;
+}
+
+.about__media__image {
+  @extend %cover;
+
+  object-fit: cover;
+}
+
+.about__brands {
+  margin-top: 6.5rem;
+}
+
+.about__brands__title {
+  font-size: 2.4rem;
+  letter-spacing: -0.05rem;
+  padding-right: 0.05rem;
+}
+
+.about__brands__description {
+  font-size: 4rem;
+  line-height: 1.2;
+  letter-spacing: -0.25rem;
+  margin-top: 3.5rem;
+  padding-right: 0.25rem;
+}

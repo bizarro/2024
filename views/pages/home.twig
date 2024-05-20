@@ -1,0 +1,23 @@
+{% extends 'base.twig' %}
+
+{% set template = 'home' %}
+
+{% block content %}
+    <div class="home">
+        <div class="home__wrapper">
+            {% include './header.twig' %}
+            {% include './about.twig' %}
+
+            <section class="projects">
+                {% include './projects/apple-vision-pro.twig' %}
+                {% include './projects/apple-3d-viewers.twig' %}
+                {% include './projects/xbox-museum.twig' %}
+                {% include './projects/tarot-with-youtube.twig' %}
+                {% include './projects/adventure-time-distant-lands.twig' %}
+                {% include './projects/trolli-deliciously-dark-escape.twig' %}
+                {% include './projects/webgl-portfolios.twig' %}
+                {% include './projects/webgl-typography.twig' %}
+            </section>
+        </div>
+    </div>
+{% endblock %}

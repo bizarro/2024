@@ -1,0 +1,35 @@
+body {
+  background: $color-black;
+  color: $color-white;
+}
+
+canvas {
+  pointer-events: none;
+}
+
+html {
+  font-family: $font-primary;
+  font-size: calc(100vw / 1920 * 10);
+  overflow: hidden auto;
+
+  @include media('<=phone') {
+    font-size: calc(100vw / 320 * 10);
+  }
+}
+
+::-webkit-scrollbar {
+  width: 1px;
+}
+
+::-webkit-scrollbar-track {
+  background: $color-black;
+}
+
+::-webkit-scrollbar-thumb {
+  background: $color-white;
+}
+
+::selection {
+  color: $color-black;
+  background: $color-white;
+}

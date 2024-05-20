@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html class="{{ isPhone ? 'phone' : isTablet ? 'tablet' : 'desktop' }}">
+    <head>
+        {% include 'shared/header.twig' %}
+    </head>
+    <body>
+        <div class="app" id="content" data-template="{{ template }}">
+            {% block content %}{% endblock %}
+        </div>
+
+        {% include 'shared/scripts.twig' %}
+    </body>
+</html>

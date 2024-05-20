@@ -1,0 +1,57 @@
+.header {
+  font-size: 2rem;
+  height: var(--100vh);
+  position: relative;
+  text-transform: uppercase;
+  width: var(--100vw);
+}
+
+.header__wrapper {
+  display: flex;
+  justify-content: space-between;
+  left: 2.5rem;
+  position: absolute;
+  top: 2.5rem;
+  width: calc(100% - 2.5rem * 2);
+}
+
+.header__title {
+  font-size: 5rem;
+  letter-spacing: -0.25rem;
+  padding-right: 0.25rem;
+}
+
+.header__location {
+}
+
+.header__role {
+}
+
+.header__year {
+  font-size: 10rem;
+  letter-spacing: -0.25rem;
+  margin-top: 10rem;
+  padding-right: 0.25rem;
+}
+
+.header__shape {
+  font-size: 5rem;
+  letter-spacing: -0.1rem;
+  margin-top: -0.3rem;
+  padding-right: 0.1rem;
+}
+
+.header__logo {
+  aspect-ratio: 2940 / 567;
+  bottom: 2.5rem;
+  left: 2.5rem;
+  position: absolute;
+  visibility: hidden;
+  width: calc(100% - 5rem);
+}
+
+.header__logo__media {
+  @extend %cover;
+
+  object-fit: cover;
+}
