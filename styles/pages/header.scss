@@ -97,7 +97,7 @@
   @include media('<=phone') {
     bottom: 1rem;
     left: 1rem;
-    width: calc(100vh - 2rem);
+    width: calc(100svh - 2rem);
     transform: rotate(90deg) translateX(-100%);
     transform-origin: bottom left;
   }
