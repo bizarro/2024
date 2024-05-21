@@ -1,58 +1,17 @@
 import './utils/Polyfills'
 import './utils/Sprites'
 
+import { Canvas } from './classes/Canvas'
+import { BREAKPOINT_PHONE } from './utils/Contants'
+
 import '../styles/index.scss'
 
-import AutoBind from 'auto-bind'
-import Lenis from 'lenis'
-
-import { Canvas } from './classes/Canvas'
-import { Home } from './pages/Home'
-
-class App {
-  constructor() {
-    AutoBind(this)
-
-    this.lenis = new Lenis({
-      wrapper: window,
-      content: document.body,
-    })
-
-    this.page = new Home({
-      app: this,
-    })
-
-    this.canvas = new Canvas({
-      app: this,
-    })
-
-    this.onResize()
-    this.onLoop()
-
-    window.addEventListener('resize', this.onResize.bind(this))
-  }
-
-  onLoop(now) {
-    this.canvas.onLoop(this.lenis.scroll)
-
-    this.lenis?.raf(now)
-
-    window.requestAnimationFrame(this.onLoop.bind(this))
-  }
-
-  onResize() {
-    const { innerHeight, innerWidth } = window
-
-    document.documentElement.style.setProperty('--100vh', `${innerHeight}px`)
-    document.documentElement.style.setProperty('--100vw', `${innerWidth}px`)
-
-    this.canvas.onResize({
-      height: innerHeight,
-      width: innerWidth,
-    })
-  }
+if (window.innerWidth > BREAKPOINT_PHONE) {
+  document.fonts.ready.then(() => {
+    new Canvas()
+  })
+} else {
+  document.querySelectorAll('[data-gl-media]').forEach((media) => {
+    media.setAttribute('src', media.dataset.glMedia)
+  })
 }
-
-document.fonts.ready.then(() => {
-  new App()
-})

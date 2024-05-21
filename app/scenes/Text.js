@@ -12,7 +12,7 @@ export class Text {
     this.geometry = geometry
     this.scene = scene
 
-    this.element.style.color = 'transparent'
+    this.element.setAttribute('data-gl-text-active', '')
 
     this.bounds = getBounds(this.element)
 
@@ -58,7 +58,9 @@ export class Text {
   }
 
   createMesh(image) {
-    const texture = new Texture(this.canvas.gl)
+    const texture = new Texture(this.canvas.gl, {
+      premultiplyAlpha: true,
+    })
 
     texture.image = image
 
@@ -119,11 +121,5 @@ export class Text {
 
     this.mesh.position.x = xFix + (x / this.canvas.viewport.x) * this.canvas.sizes.x
     this.mesh.position.y = yFix - (y / this.canvas.viewport.y) * this.canvas.sizes.y
-  }
-
-  destroy() {
-    super.destroy()
-
-    this.mesh.setParent(null)
   }
 }

@@ -1,9 +1,14 @@
 .header {
-  font-size: 2rem;
-  height: var(--100vh);
+  font-size: 1.8rem;
+  height: 100vh;
+  height: 100lvh;
   position: relative;
   text-transform: uppercase;
-  width: var(--100vw);
+  width: 100%;
+
+  @include media('<=phone') {
+    font-size: 1rem;
+  }
 }
 
 .header__wrapper {
@@ -13,12 +18,41 @@
   position: absolute;
   top: 2.5rem;
   width: calc(100% - 2.5rem * 2);
+
+  @include media('<=phone') {
+    border: 1px solid;
+    border-radius: 0.5rem;
+    flex-direction: column;
+    gap: 1.5rem;
+    height: calc(100% - 2rem);
+    justify-content: flex-start;
+    left: 13rem;
+    padding: 1rem;
+    top: 1rem;
+    width: calc(100% - 14rem);
+  }
+}
+
+.header__column {
+  @include media('<=phone') {
+    &:last-child {
+      bottom: -0.5rem;
+      left: 1rem;
+      position: absolute;
+    }
+  }
 }
 
 .header__title {
   font-size: 5rem;
   letter-spacing: -0.25rem;
-  padding-right: 0.25rem;
+  padding-right: 2rem;
+
+  @include media('<=phone') {
+    font-size: 3rem;
+    letter-spacing: -0.15rem;
+    padding-right: 0.15rem;
+  }
 }
 
 .header__location {
@@ -28,26 +62,45 @@
 }
 
 .header__year {
-  font-size: 10rem;
+  font-size: 8rem;
   letter-spacing: -0.25rem;
   margin-top: 10rem;
   padding-right: 0.25rem;
+
+  @include media('<=phone') {
+    bottom: 0.5rem;
+    font-size: 5rem;
+    position: absolute;
+    right: 1rem;
+  }
 }
 
 .header__shape {
-  font-size: 5rem;
+  font-size: 4.2rem;
   letter-spacing: -0.1rem;
-  margin-top: -0.3rem;
+  margin-top: -0.45rem;
   padding-right: 0.1rem;
+
+  @include media('<=phone') {
+    font-size: 11.3rem;
+  }
 }
 
 .header__logo {
   aspect-ratio: 2940 / 567;
   bottom: 2.5rem;
+  font-size: 0;
   left: 2.5rem;
   position: absolute;
-  visibility: hidden;
   width: calc(100% - 5rem);
+
+  @include media('<=phone') {
+    bottom: 1rem;
+    left: 1rem;
+    width: calc(100vh - 2rem);
+    transform: rotate(90deg) translateX(-100%);
+    transform-origin: bottom left;
+  }
 }
 
 .header__logo__media {

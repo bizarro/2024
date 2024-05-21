@@ -1,5 +1,9 @@
 .about {
   margin: 2.5rem;
+
+  @include media('<=phone') {
+    margin: 1rem;
+  }
 }
 
 .about__introduction {
@@ -10,16 +14,40 @@
   p {
     margin-top: 1em;
   }
+
+  @include media('<=phone') {
+    font-size: 2rem;
+    letter-spacing: -0.1rem;
+
+    br {
+      display: none;
+    }
+  }
 }
 
 .about__content {
   display: flex;
   justify-content: space-between;
   margin-top: 10rem;
+
+  @include media('<=phone') {
+    flex-direction: column-reverse;
+    gap: 1rem;
+    margin-top: 5rem;
+  }
 }
 
 .about__content__column {
   width: calc(50% - 2.5rem);
+
+  @include media('<=phone') {
+    width: 100%;
+
+    &:last-child {
+      display: flex;
+      flex-direction: column-reverse;
+    }
+  }
 }
 
 .about__information {
@@ -29,10 +57,22 @@
   letter-spacing: -0.1rem;
   line-height: 1.2;
   padding-right: 0.1rem;
+
+  @include media('<=phone') {
+    font-size: 1.4rem;
+    letter-spacing: -0.05rem;
+  }
 }
 
 .about__information__column {
   width: 33.33%;
+
+  @include media('<=phone') {
+    width: 50%;
+    &:first-child {
+      display: none;
+    }
+  }
 }
 
 .about__information__link {
@@ -40,7 +80,9 @@
 
 .about__media {
   aspect-ratio: 1;
+  border-radius: 0.5rem;
   display: block;
+  overflow: hidden;
   position: relative;
   width: 100%;
 }
@@ -53,12 +95,21 @@
 
 .about__brands {
   margin-top: 6.5rem;
+
+  @include media('<=phone') {
+    margin-bottom: 2.5rem;
+    margin-top: 0;
+  }
 }
 
 .about__brands__title {
   font-size: 2.4rem;
   letter-spacing: -0.05rem;
   padding-right: 0.05rem;
+
+  @include media('<=phone') {
+    font-size: 1.2rem;
+  }
 }
 
 .about__brands__description {
@@ -67,4 +118,15 @@
   letter-spacing: -0.25rem;
   margin-top: 3.5rem;
   padding-right: 0.25rem;
+
+  @include media('<=phone') {
+    font-size: 2rem;
+    letter-spacing: -0.15rem;
+    line-height: 1.1;
+    margin-top: 1rem;
+
+    br {
+      display: none;
+    }
+  }
 }

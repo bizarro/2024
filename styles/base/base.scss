@@ -5,6 +5,26 @@ body {
 
 canvas {
   pointer-events: none;
+
+  @include media('<=phone') {
+    visibility: hidden;
+  }
+}
+
+[data-gl-media] {
+  @include media('>phone') {
+    &[data-gl-media-active] {
+      opacity: 0;
+    }
+  }
+}
+
+[data-gl-text] {
+  @include media('>phone') {
+    &[data-gl-text-active] {
+      color: transparent;
+    }
+  }
 }
 
 html {

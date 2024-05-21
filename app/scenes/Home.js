@@ -4,18 +4,17 @@ import { Media } from './Media'
 import { Text } from './Text'
 
 export class Home extends Transform {
-  constructor({ canvas, page }) {
+  constructor({ canvas }) {
     super()
 
     this.canvas = canvas
-    this.page = page
 
     const geometry = new Plane(this.canvas.gl, {
       heightSegments: 1,
       widthSegments: 1,
     })
 
-    this.medias = this.page.elements.medias.map(
+    this.medias = document.querySelectorAll('[data-gl-media]').map(
       (element) =>
         new Media({
           canvas: this.canvas,
@@ -25,7 +24,7 @@ export class Home extends Transform {
         }),
     )
 
-    this.texts = this.page.elements.texts.map(
+    this.texts = document.querySelectorAll('[data-gl-text]').map(
       (element) =>
         new Text({
           canvas: this.canvas,
@@ -44,12 +43,5 @@ export class Home extends Transform {
   onLoop(scroll) {
     this.medias?.forEach((media) => media.onLoop(scroll))
     this.texts?.forEach((text) => text.onLoop(scroll))
-  }
-
-  destroy() {
-    super.destroy()
-
-    this.medias?.forEach((media) => media.destroy())
-    this.texts?.forEach((text) => text.destroy())
   }
 }

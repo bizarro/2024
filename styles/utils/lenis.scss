@@ -1,21 +1,20 @@
-.lenis {
-  &.lenis-smooth {
-    scroll-behavior: auto;
-  }
+html.lenis,
+html.lenis body {
+  height: auto;
+}
 
-  &.lenis-smooth {
-    [data-lenis-prevent] {
-      overscroll-behavior: contain;
-    }
-  }
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
 
-  &.lenis-scrolling {
-    iframe {
-      pointer-events: none;
-    }
-  }
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
 
-  &.lenis-stopped {
-    overflow: hidden;
-  }
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
 }

@@ -23,6 +23,7 @@
     "gsap": "^3.12.5",
     "include-media": "^2.0.0",
     "lenis": "^1.0.45",
+    "lodash": "^4.17.21",
     "mobx": "^6.12.3",
     "node-fetch": "^2.7.0",
     "nodemailer": "^6.9.5",

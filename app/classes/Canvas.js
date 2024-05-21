@@ -1,7 +1,10 @@
 import AutoBind from 'auto-bind'
+import Lenis from 'lenis'
+import debounce from 'lodash/debounce'
 import { Camera, Color, Geometry, Post, Program, Mesh, Renderer, RenderTarget, Vec2 } from 'ogl'
 
 import { Home } from '../scenes/Home'
+import { BREAKPOINT_PHONE } from '../utils/Contants'
 
 const fragment = /* glsl */ `
   precision highp float;
@@ -402,11 +405,10 @@ gl.renderer.getExtension('OES_standard_derivatives')
 const lastMouse = new Vec2()
 
 export class Canvas {
-  constructor({ app }) {
+  constructor() {
     AutoBind(this)
 
-    this.app = app
-
+    this.createScroll()
     this.createRenderer()
     this.createCamera()
     this.createPost()
@@ -417,6 +419,19 @@ export class Canvas {
     this.onResize({
       height: window.innerHeight,
       width: window.innerWidth,
+    })
+
+    this.onResize = debounce(this.onResize.bind(this), 400)
+
+    window.addEventListener('resize', this.onResize)
+
+    this.onLoop()
+  }
+
+  createScroll() {
+    this.lenis = new Lenis({
+      content: document.body,
+      wrapper: document.body,
     })
   }
 
@@ -643,7 +658,6 @@ export class Canvas {
   createScene() {
     this.scene = new Home({
       canvas: this,
-      page: this.app.page,
     })
   }
 
@@ -712,7 +726,13 @@ export class Canvas {
   //
   // Events.
   //
-  onLoop(scroll) {
+  onLoop(now) {
+    this.lenis?.raf(now)
+
+    if (window.innerWidth <= BREAKPOINT_PHONE) {
+      return window.requestAnimationFrame(this.onLoop.bind(this))
+    }
+
     // Perform all of the fluid simulation renders
     // No need to clear during sim, saving a number of GL calls.
     this.renderer.autoClear = false
@@ -829,10 +849,14 @@ export class Canvas {
       scene: this.scene,
     })
 
-    this.scene.onLoop(scroll)
+    this.scene.onLoop(this.lenis.scroll)
+
+    window.requestAnimationFrame(this.onLoop.bind(this))
   }
 
-  onResize({ height, width }) {
+  onResize() {
+    const { innerHeight: height, innerWidth: width } = window
+
     this.renderer.setSize(width, height)
 
     this.camera.perspective({

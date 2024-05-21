@@ -12,14 +12,17 @@ export class Media {
     this.geometry = geometry
     this.scene = scene
 
-    this.element.style.opacity = 0
+    this.element.setAttribute('crossorigin', 'anonymous')
+    this.element.setAttribute('data-gl-media-active', '')
 
     this.createTexture()
     this.createMesh()
   }
 
   createTexture() {
-    this.texture = new Texture(this.canvas.gl)
+    this.texture = new Texture(this.canvas.gl, {
+      premultiplyAlpha: true,
+    })
 
     this.element.src = this.element.dataset.glMedia
 
@@ -116,11 +119,5 @@ export class Media {
 
     this.mesh.position.x = xFix + (x / this.canvas.viewport.x) * this.canvas.sizes.x
     this.mesh.position.y = yFix - (y / this.canvas.viewport.y) * this.canvas.sizes.y
-  }
-
-  destroy() {
-    super.destroy()
-
-    this.mesh.setParent(null)
   }
 }

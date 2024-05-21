@@ -1,20 +1,34 @@
 .projects {
   margin-top: 20rem;
   padding-bottom: 0.1px;
+
+  @include media('<=phone') {
+    margin-top: 10rem;
+  }
 }
 
 .project {
   margin: 2.5rem;
+
+  @include media('<=phone') {
+    margin: 1rem;
+  }
 }
 
 .project__header {
   border: 1px solid;
-  border-radius: 1rem;
+  border-radius: 0.5rem;
   display: flex;
   height: 59rem;
   justify-content: space-between;
   margin-bottom: 2.5rem;
   position: relative;
+
+  @include media('<=phone') {
+    flex-direction: column;
+    height: auto;
+    margin-bottom: 1rem;
+  }
 }
 
 .project__header__content {
@@ -25,6 +39,10 @@
   justify-content: space-between;
   padding: 2.5rem;
   position: relative;
+
+  @include media('<=phone') {
+    padding: 1.5rem;
+  }
 }
 
 .project__header__title {
@@ -32,6 +50,11 @@
   letter-spacing: -0.25rem;
   padding-right: 0.25rem;
   text-transform: uppercase;
+
+  @include media('<=phone') {
+    font-size: 3rem;
+    letter-spacing: -0.15rem;
+  }
 }
 
 .project__header__description {
@@ -40,16 +63,32 @@
   line-height: 1.2;
   padding-right: 0.25rem;
   margin-top: auto;
+
+  @include media('<=phone') {
+    font-size: 1.6rem;
+    letter-spacing: -0.1rem;
+    margin-top: 2.5rem;
+
+    br {
+      display: none;
+    }
+  }
 }
 
 .project__header__information {
   font-size: 1.8rem;
-  line-height: 1.2;
   position: absolute;
   right: 2.5rem;
   text-align: right;
   text-transform: uppercase;
   top: 2.5rem;
+
+  @include media('<=phone') {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    position: static;
+    text-align: left;
+  }
 }
 
 .project__header__link {
@@ -66,6 +105,12 @@
   &:hover {
     background: rgba(255, 255, 255, 0.5);
   }
+
+  @include media('<=phone') {
+    border-left: none;
+    border-top: 1px solid;
+    padding: 0;
+  }
 }
 
 .project__header__link__text {
@@ -73,17 +118,27 @@
   font-size: 10rem;
   letter-spacing: -0.25rem;
   padding-right: 0.25rem;
+
+  @include media('<=phone') {
+    font-size: 3rem;
+    letter-spacing: -0.15rem;
+    padding: 1.5rem 1.5rem 1rem;
+  }
 }
 
 .project__content {
   display: flex;
   flex-wrap: wrap;
   gap: 2.5rem;
+
+  @include media('<=phone') {
+    gap: 1rem;
+  }
 }
 
 .project__media {
   aspect-ratio: 1920 / 1080;
-  border-radius: 1rem;
+  border-radius: 0.5rem;
   display: block;
   overflow: hidden;
   position: relative;
@@ -92,6 +147,12 @@
   &--50 {
     aspect-ratio: 1;
     width: calc(50% - 2.5rem / 2);
+  }
+
+  @include media('<=phone') {
+    &--50 {
+      width: calc(50% - 1rem / 2);
+    }
   }
 }
 
