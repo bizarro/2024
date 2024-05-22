@@ -19,8 +19,8 @@ export class Text {
     const canvasText = document.createElement('canvas')
     const context = canvasText.getContext('2d')
 
-    canvasText.height = this.bounds.height
-    canvasText.width = this.bounds.width
+    canvasText.height = this.bounds.height * 2
+    canvasText.width = this.bounds.width * 2
 
     let text = this.element.textContent.trim().replace(/  /g, '').replace(/<br>/g, '')
 
@@ -29,19 +29,19 @@ export class Text {
     }
 
     const { fontFamily, fontSize, letterSpacing, lineHeight } = getComputedStyle(this.element)
+    const fontSizeValue = fontSize.replace('px', '')
+    const lineHeightValue = lineHeight.replace('px', '')
 
     context.fillStyle = '#fff'
-    context.font = `${fontSize}/${lineHeight} ${fontFamily}`
-    context.letterSpacing = letterSpacing
+    context.font = `${fontSizeValue * 2}px/${lineHeightValue * 2}px ${fontFamily}`
+    context.letterSpacing = letterSpacing * 2
     context.textAlign = 'left'
     context.textBaseline = 'top'
 
     const lines = text.split('\n')
 
     for (let i = 0; i < lines.length; i += 1) {
-      const lineSpacing = lineHeight.replace('px', '')
-
-      context.fillText(lines[i], 0, (i * lineSpacing).toFixed(2))
+      context.fillText(lines[i], 0, (i * lineHeightValue * 2).toFixed(2))
     }
 
     this.createImage(canvasText)

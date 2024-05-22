@@ -116,7 +116,7 @@
   display: inline-block;
   font-size: 10rem;
   letter-spacing: -0.25rem;
-  padding-right: 0.25rem;
+  padding-right: 1rem;
 
   @include media('<=phone') {
     font-size: 3rem;
