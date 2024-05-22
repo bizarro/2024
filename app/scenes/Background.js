@@ -2,10 +2,10 @@ import { Mesh, Program, Texture } from 'ogl'
 
 import { getBounds } from '../utils/DOM'
 
-import fragment from '../shaders/text-fragment.glsl'
-import vertex from '../shaders/text-vertex.glsl'
+import fragment from '../shaders/media-fragment.glsl'
+import vertex from '../shaders/media-vertex.glsl'
 
-export class Text {
+export class Background {
   constructor({ canvas, element, geometry, scene }) {
     this.canvas = canvas
     this.element = element
@@ -16,35 +16,29 @@ export class Text {
 
     this.bounds = getBounds(this.element)
 
-    const canvasText = document.createElement('canvas')
-    const context = canvasText.getContext('2d')
+    const canvasBackground = document.createElement('canvas')
+    const context = canvasBackground.getContext('2d')
 
-    canvasText.height = this.bounds.height
-    canvasText.width = this.bounds.width
+    const width = this.element.querySelector('[data-gl-background-line]').offsetLeft
 
-    let text = this.element.textContent.trim().replace(/  /g, '').replace(/<br>/g, '')
+    canvasBackground.height = this.bounds.height
+    canvasBackground.width = this.bounds.width
 
-    if (this.element.dataset.glText === 'uppercase') {
-      text = text.toUpperCase()
-    }
+    context.strokeStyle = '#fff'
+    context.lineWidth = 2
 
-    const { fontFamily, fontSize, letterSpacing, lineHeight } = getComputedStyle(this.element)
+    context.beginPath()
+    context.moveTo(width, 0)
+    context.lineTo(width, this.bounds.height - 2)
+    context.stroke()
+    context.closePath()
 
-    context.fillStyle = '#fff'
-    context.font = `${fontSize}/${lineHeight} ${fontFamily}`
-    context.letterSpacing = letterSpacing
-    context.textAlign = 'left'
-    context.textBaseline = 'top'
+    context.beginPath()
+    context.roundRect(0, 0, this.bounds.width - 2, this.bounds.height - 2, 10)
+    context.stroke()
+    context.closePath()
 
-    const lines = text.split('\n')
-
-    for (let i = 0; i < lines.length; i += 1) {
-      const lineSpacing = lineHeight.replace('px', '')
-
-      context.fillText(lines[i], 0, (i * lineSpacing).toFixed(2))
-    }
-
-    this.createImage(canvasText)
+    this.createImage(canvasBackground)
   }
 
   createImage(canvas) {
@@ -83,8 +77,6 @@ export class Text {
       geometry: this.geometry,
       program,
     })
-
-    this.mesh.position.z = 0.01
 
     this.mesh.setParent(this.scene)
   }

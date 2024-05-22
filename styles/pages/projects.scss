@@ -16,7 +16,7 @@
 }
 
 .project__header {
-  border: 1px solid;
+  border: 1px solid transparent;
   border-radius: 0.5rem;
   display: flex;
   height: 59rem;
@@ -25,6 +25,7 @@
   position: relative;
 
   @include media('<=phone') {
+    border-color: $color-white;
     flex-direction: column;
     height: auto;
     margin-bottom: 1rem;
@@ -92,24 +93,22 @@
 }
 
 .project__header__link {
-  border-left: 1px solid;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
   height: 100%;
   padding: 2.5rem;
   text-transform: uppercase;
-  transition: background 0.4s ease;
   white-space: nowrap;
 
-  &:hover {
-    background: rgba(255, 255, 255, 0.5);
-  }
-
   @include media('<=phone') {
-    border-left: none;
     border-top: 1px solid;
     padding: 0;
+    transition: background 0.4s ease;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.5);
+    }
   }
 }
 
