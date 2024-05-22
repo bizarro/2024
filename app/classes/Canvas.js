@@ -6,309 +6,33 @@ import { Camera, Color, Geometry, Post, Program, Mesh, Renderer, RenderTarget, V
 import { Home } from '../scenes/Home'
 import { BREAKPOINT_PHONE } from '../utils/Contants'
 
-const fragment = /* glsl */ `
-  precision highp float;
-
-  uniform sampler2D tMap;
-  uniform sampler2D tFluid;
-  uniform float uTime;
-  varying vec2 vUv;
-
-  void main() {
-      vec3 fluid = texture2D(tFluid, vUv).rgb;
-      vec2 uv = vUv;
-      vec2 uv2 = vUv - fluid.rg * 0.0003;
-
-      vec4 color = texture2D(tMap, uv2);
-
-      vec3 rgb = fluid * 0.003;
-
-      color.r = texture2D(tMap, vec2(uv.x + rgb.x, uv.y + rgb.y)).r;
-      color.g = texture2D(tMap, vec2(uv.x - rgb.x, uv.y + rgb.y)).g;
-      color.b = texture2D(tMap, vec2(uv.x - rgb.x, uv.y - rgb.y)).b;
-
-      gl_FragColor = color;
-
-      // Oscillate between fluid values and the distorted scene
-      // gl_FragColor = mix(color, vec4(fluid * 0.1 + 0.5, 1), smoothstep(0.0, 0.7, sin(uTime)));
-  }
-`
-
-const baseVertex = /* glsl */ `
-  precision highp float;
-  attribute vec2 position;
-  attribute vec2 uv;
-  varying vec2 vUv;
-  varying vec2 vL;
-  varying vec2 vR;
-  varying vec2 vT;
-  varying vec2 vB;
-  uniform vec2 texelSize;
-  void main () {
-    vUv = uv;
-
-    vL = vUv - vec2(texelSize.x, 0.0);
-    vR = vUv + vec2(texelSize.x, 0.0);
-    vT = vUv + vec2(0.0, texelSize.y);
-    vB = vUv - vec2(0.0, texelSize.y);
-
-    gl_Position = vec4(position, 0, 1);
-  }
-`
-
-const clearShader = /* glsl */ `
-  precision mediump float;
-  precision mediump sampler2D;
-
-  varying highp vec2 vUv;
-  
-  uniform sampler2D uTexture;
-  uniform float value;
-
-  void main () {
-    gl_FragColor = value * texture2D(uTexture, vUv);
-  }
-`
-
-const splatShader = /* glsl */ `
-  precision highp float;
-  precision highp sampler2D;
-
-  varying vec2 vUv;
-
-  uniform sampler2D uTarget;
-  uniform float aspectRatio;
-  uniform vec3 color;
-  uniform vec2 point;
-  uniform float radius;
-
-  void main () {
-    vec2 p = vUv - point.xy;
-
-    p.x *= aspectRatio;
-
-    vec3 splat = exp(-dot(p, p) / radius) * color;
-    vec3 base = texture2D(uTarget, vUv).xyz;
-
-    gl_FragColor = vec4(base + splat, 1.0);
-  }
-`
-
-const advectionManualFilteringShader = /* glsl */ `
-  precision highp float;
-  precision highp sampler2D;
-
-  varying vec2 vUv;
-
-  uniform sampler2D uVelocity;
-  uniform sampler2D uSource;
-  uniform vec2 texelSize;
-  uniform vec2 dyeTexelSize;
-  uniform float dt;
-  uniform float dissipation;
-
-  vec4 bilerp (sampler2D sam, vec2 uv, vec2 tsize) {
-    vec2 st = uv / tsize - 0.5;
-    
-    vec2 iuv = floor(st);
-    vec2 fuv = fract(st);
-
-    vec4 a = texture2D(sam, (iuv + vec2(0.5, 0.5)) * tsize);
-    vec4 b = texture2D(sam, (iuv + vec2(1.5, 0.5)) * tsize);
-    vec4 c = texture2D(sam, (iuv + vec2(0.5, 1.5)) * tsize);
-    vec4 d = texture2D(sam, (iuv + vec2(1.5, 1.5)) * tsize);
-
-    return mix(mix(a, b, fuv.x), mix(c, d, fuv.x), fuv.y);
-  }
-
-  void main () {
-    vec2 coord = vUv - dt * bilerp(uVelocity, vUv, texelSize).xy * texelSize;
-
-    gl_FragColor = dissipation * bilerp(uSource, coord, dyeTexelSize);
-    gl_FragColor.a = 1.0;
-  }
-`
-
-const advectionShader = /* glsl */ `
-  precision highp float;
-  precision highp sampler2D;
-
-  varying vec2 vUv;
-
-  uniform sampler2D uVelocity;
-  uniform sampler2D uSource;
-  uniform vec2 texelSize;
-  uniform float dt;
-  uniform float dissipation;
-
-  void main () {
-    vec2 coord = vUv - dt * texture2D(uVelocity, vUv).xy * texelSize;
-
-    gl_FragColor = dissipation * texture2D(uSource, coord);
-    gl_FragColor.a = 1.0;
-  }
-`
-
-const divergenceShader = /* glsl */ `
-  precision mediump float;
-  precision mediump sampler2D;
-
-  varying highp vec2 vUv;
-  varying highp vec2 vL;
-  varying highp vec2 vR;
-  varying highp vec2 vT;
-  varying highp vec2 vB;
-
-  uniform sampler2D uVelocity;
-
-  void main () {
-    float L = texture2D(uVelocity, vL).x;
-    float R = texture2D(uVelocity, vR).x;
-    float T = texture2D(uVelocity, vT).y;
-    float B = texture2D(uVelocity, vB).y;
-
-    vec2 C = texture2D(uVelocity, vUv).xy;
-
-    if (vL.x < 0.0) { L = -C.x; }
-    if (vR.x > 1.0) { R = -C.x; }
-    if (vT.y > 1.0) { T = -C.y; }
-    if (vB.y < 0.0) { B = -C.y; }
-
-    float div = 0.5 * (R - L + T - B);
-
-    gl_FragColor = vec4(div, 0.0, 0.0, 1.0);
-  }
-`
-
-const curlShader = /* glsl */ `
-  precision mediump float;
-  precision mediump sampler2D;
-
-  varying highp vec2 vUv;
-  varying highp vec2 vL;
-  varying highp vec2 vR;
-  varying highp vec2 vT;
-  varying highp vec2 vB;
-
-  uniform sampler2D uVelocity;
-
-  void main () {
-    float L = texture2D(uVelocity, vL).y;
-    float R = texture2D(uVelocity, vR).y;
-    float T = texture2D(uVelocity, vT).x;
-    float B = texture2D(uVelocity, vB).x;
-
-    float vorticity = R - L - T + B;
-
-    gl_FragColor = vec4(0.5 * vorticity, 0.0, 0.0, 1.0);
-  }
-`
-
-const vorticityShader = /* glsl */ `
-  precision highp float;
-  precision highp sampler2D;
-
-  varying vec2 vUv;
-  varying vec2 vL;
-  varying vec2 vR;
-  varying vec2 vT;
-  varying vec2 vB;
-
-  uniform sampler2D uVelocity;
-  uniform sampler2D uCurl;
-  uniform float curl;
-  uniform float dt;
-
-  void main () {
-    float L = texture2D(uCurl, vL).x;
-    float R = texture2D(uCurl, vR).x;
-    float T = texture2D(uCurl, vT).x;
-    float B = texture2D(uCurl, vB).x;
-    float C = texture2D(uCurl, vUv).x;
-
-    vec2 force = 0.5 * vec2(abs(T) - abs(B), abs(R) - abs(L));
-
-    force /= length(force) + 0.0001;
-    force *= curl * C;
-    force.y *= -1.0;
-
-    vec2 vel = texture2D(uVelocity, vUv).xy;
-
-    gl_FragColor = vec4(vel + force * dt, 0.0, 1.0);
-  }
-`
-
-const pressureShader = /* glsl */ `
-  precision mediump float;
-  precision mediump sampler2D;
-
-  varying highp vec2 vUv;
-  varying highp vec2 vL;
-  varying highp vec2 vR;
-  varying highp vec2 vT;
-  varying highp vec2 vB;
-
-  uniform sampler2D uPressure;
-  uniform sampler2D uDivergence;
-
-  void main () {
-    float L = texture2D(uPressure, vL).x;
-    float R = texture2D(uPressure, vR).x;
-    float T = texture2D(uPressure, vT).x;
-    float B = texture2D(uPressure, vB).x;
-    float C = texture2D(uPressure, vUv).x;
-
-    float divergence = texture2D(uDivergence, vUv).x;
-    float pressure = (L + R + B + T - divergence) * 0.25;
-
-    gl_FragColor = vec4(pressure, 0.0, 0.0, 1.0);
-  }
-`
-
-const gradientSubtractShader = /* glsl */ `
-  precision mediump float;
-  precision mediump sampler2D;
-
-  varying highp vec2 vUv;
-  varying highp vec2 vL;
-  varying highp vec2 vR;
-  varying highp vec2 vT;
-  varying highp vec2 vB;
-
-  uniform sampler2D uPressure;
-  uniform sampler2D uVelocity;
-
-  void main () {
-    float L = texture2D(uPressure, vL).x;
-    float R = texture2D(uPressure, vR).x;
-    float T = texture2D(uPressure, vT).x;
-    float B = texture2D(uPressure, vB).x;
-
-    vec2 velocity = texture2D(uVelocity, vUv).xy;
-
-    velocity.xy -= vec2(R - L, T - B);
-
-    gl_FragColor = vec4(velocity, 0.0, 1.0);
-  }
-`
-
-const renderer = new Renderer({
+import advectionManualFilteringShader from '../shaders/advection-manual-filtering-shader.glsl'
+import advectionShader from '../shaders/advection-shader.glsl'
+import baseVertex from '../shaders/base-vertex.glsl'
+import clearShader from '../shaders/clear-shader.glsl'
+import curlShader from '../shaders/curl-shader.glsl'
+import divergenceShader from '../shaders/divergence-shader.glsl'
+import fragment from '../shaders/fragment.glsl'
+import gradientSubtractShader from '../shaders/gradient-subtract-shader.glsl'
+import pressureShader from '../shaders/pressure-shader.glsl'
+import splatShader from '../shaders/splat-shader.glsl'
+import vorticityShader from '../shaders/vorticity-shader.glsl'
+
+export const renderer = new Renderer({
   alpha: true,
   antialias: true,
   dpr: window.devicePixelRatio,
 })
 
-const gl = renderer.gl
+export const gl = renderer.gl
 
 function getSupportedFormat(gl, internalFormat, format, type) {
   if (!supportRenderTextureFormat(gl, internalFormat, format, type)) {
+    // prettier-ignore
     switch (internalFormat) {
-      case gl.R16F:
-        return getSupportedFormat(gl, gl.RG16F, gl.RG, type)
-      case gl.RG16F:
-        return getSupportedFormat(gl, gl.RGBA16F, gl.RGBA, type)
-      default:
-        return null
+      case gl.R16F: return getSupportedFormat(gl, gl.RG16F, gl.RG, type)
+      case gl.RG16F: return getSupportedFormat(gl, gl.RGBA16F, gl.RGBA, type)
+      default: return null
     }
   }
 
@@ -369,25 +93,25 @@ function createDoubleFBO(
   return fbo
 }
 
-// Resolution of simulation
-const simRes = 128
-const dyeRes = 512
+const SIMULATION_RESOLUTION = 128
+const DYE_RESOLUTION = 512
+const ITERATIONS = 3
 
-// Main inputs to control look and feel of fluid
-const iterations = 3
 let densityDissipation = 0.93
 let velocityDissipation = 0.9
 let pressureDissipation = 0.8
 let curlStrength = 20
 let radius = 0.3
 
-const texelSize = { value: new Vec2(1 / simRes) }
+const texelSize = {
+  value: new Vec2(1 / SIMULATION_RESOLUTION),
+}
 
 // Get supported formats and types for FBOs
-let supportLinearFiltering = gl.renderer.extensions[`OES_texture_${gl.renderer.isWebgl2 ? `` : `half_`}float_linear`]
+const supportLinearFiltering = gl.renderer.extensions[`OES_texture_${gl.renderer.isWebgl2 ? `` : `half_`}float_linear`]
 const halfFloat = gl.renderer.isWebgl2 ? gl.HALF_FLOAT : gl.renderer.extensions['OES_texture_half_float'].HALF_FLOAT_OES
-
 const filtering = supportLinearFiltering ? gl.LINEAR : gl.NEAREST
+
 let rgba, rg, r
 
 if (gl.renderer.isWebgl2) {
@@ -505,8 +229,8 @@ export class Canvas {
   createMouseFluid() {
     // Create fluid simulation FBOs
     this.density = createDoubleFBO(this.gl, {
-      width: dyeRes,
-      height: dyeRes,
+      width: DYE_RESOLUTION,
+      height: DYE_RESOLUTION,
       type: halfFloat,
       format: rgba?.format,
       internalFormat: rgba?.internalFormat,
@@ -515,8 +239,8 @@ export class Canvas {
     })
 
     this.velocity = createDoubleFBO(this.gl, {
-      width: simRes,
-      height: simRes,
+      width: SIMULATION_RESOLUTION,
+      height: SIMULATION_RESOLUTION,
       type: halfFloat,
       format: rg?.format,
       internalFormat: rg?.internalFormat,
@@ -525,8 +249,8 @@ export class Canvas {
     })
 
     this.pressure = createDoubleFBO(this.gl, {
-      width: simRes,
-      height: simRes,
+      width: SIMULATION_RESOLUTION,
+      height: SIMULATION_RESOLUTION,
       type: halfFloat,
       format: r?.format,
       internalFormat: r?.internalFormat,
@@ -535,8 +259,8 @@ export class Canvas {
     })
 
     this.divergence = new RenderTarget(this.gl, {
-      width: simRes,
-      height: simRes,
+      width: SIMULATION_RESOLUTION,
+      height: SIMULATION_RESOLUTION,
       type: halfFloat,
       format: r?.format,
       internalFormat: r?.internalFormat,
@@ -545,8 +269,8 @@ export class Canvas {
     })
 
     this.curl = new RenderTarget(this.gl, {
-      width: simRes,
-      height: simRes,
+      width: SIMULATION_RESOLUTION,
+      height: SIMULATION_RESOLUTION,
       type: halfFloat,
       format: r?.format,
       internalFormat: r?.internalFormat,
@@ -601,7 +325,7 @@ export class Canvas {
         fragment: supportLinearFiltering ? advectionShader : advectionManualFilteringShader,
         uniforms: {
           texelSize,
-          dyeTexelSize: { value: new Vec2(1 / dyeRes) },
+          dyeTexelSize: { value: new Vec2(1 / DYE_RESOLUTION) },
           uVelocity: { value: null },
           uSource: { value: null },
           dt: { value: 0.016 },
@@ -831,7 +555,7 @@ export class Canvas {
 
     this.pressureProgram.program.uniforms.uDivergence.value = this.divergence.texture
 
-    for (let i = 0; i < iterations; i++) {
+    for (let i = 0; i < ITERATIONS; i++) {
       this.pressureProgram.program.uniforms.uPressure.value = this.pressure.read.texture
 
       this.renderer.render({
@@ -856,7 +580,7 @@ export class Canvas {
 
     this.velocity.swap()
 
-    this.advectionProgram.program.uniforms.dyeTexelSize.value.set(1 / simRes)
+    this.advectionProgram.program.uniforms.dyeTexelSize.value.set(1 / SIMULATION_RESOLUTION)
     this.advectionProgram.program.uniforms.uVelocity.value = this.velocity.read.texture
     this.advectionProgram.program.uniforms.uSource.value = this.velocity.read.texture
     this.advectionProgram.program.uniforms.dissipation.value = velocityDissipation
@@ -870,7 +594,7 @@ export class Canvas {
 
     this.velocity.swap()
 
-    this.advectionProgram.program.uniforms.dyeTexelSize.value.set(1 / dyeRes)
+    this.advectionProgram.program.uniforms.dyeTexelSize.value.set(1 / DYE_RESOLUTION)
     this.advectionProgram.program.uniforms.uVelocity.value = this.velocity.read.texture
     this.advectionProgram.program.uniforms.uSource.value = this.density.read.texture
     this.advectionProgram.program.uniforms.dissipation.value = densityDissipation
