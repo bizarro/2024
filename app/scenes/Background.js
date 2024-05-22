@@ -2,8 +2,8 @@ import { Mesh, Program, Texture } from 'ogl'
 
 import { getBounds } from '../utils/DOM'
 
-import fragment from '../shaders/media-fragment.glsl'
-import vertex from '../shaders/media-vertex.glsl'
+import fragment from '../shaders/background-fragment.glsl'
+import vertex from '../shaders/background-vertex.glsl'
 
 function roundRect(context, x, y, width, height, radius = 5) {
   radius = { tl: radius, tr: radius, br: radius, bl: radius }
@@ -37,23 +37,24 @@ export class Background {
     const canvasBackground = document.createElement('canvas')
     const context = canvasBackground.getContext('2d')
 
-    const width = this.element.querySelector('[data-gl-background-line]').offsetLeft
+    const offset = this.element.querySelector('[data-gl-background-line]').offsetLeft
+    const border = 2 * 2
+    const height = this.bounds.height * 2
+    const width = this.bounds.width * 2
 
-    canvasBackground.height = this.bounds.height
-    canvasBackground.width = this.bounds.width
+    canvasBackground.height = height
+    canvasBackground.width = width
 
     context.strokeStyle = '#fff'
-    context.lineWidth = 2
+    context.lineWidth = border
 
     context.beginPath()
-    context.moveTo(width, 0)
-    context.lineTo(width, this.bounds.height - 2)
+    context.moveTo(offset * 2, 0)
+    context.lineTo(offset * 2, width - border / 2)
     context.stroke()
     context.closePath()
 
-    context.lineWidth = 2
-
-    roundRect(context, 1, 1, this.bounds.width - 2, this.bounds.height - 2, 10)
+    roundRect(context, 1, 1, width - border / 2, height - border / 2, 15)
 
     this.createImage(canvasBackground)
   }
@@ -65,7 +66,7 @@ export class Background {
       this.createMesh(image)
     }
 
-    image.src = canvas.toDataURL('image/png', 1)
+    image.src = canvas.toDataURL('image/webp', 1)
   }
 
   createMesh(image) {
