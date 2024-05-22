@@ -137,6 +137,7 @@
   letter-spacing: -0.1rem;
   line-height: 1.2;
   margin-top: 2.5rem;
+  padding-right: 1.5rem;
 
   @include media('<=phone') {
     font-size: 1.4rem;
