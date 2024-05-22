@@ -375,11 +375,11 @@ const dyeRes = 512
 
 // Main inputs to control look and feel of fluid
 const iterations = 3
-const densityDissipation = 0.93
-const velocityDissipation = 0.9
-const pressureDissipation = 0.8
-const curlStrength = 20
-const radius = 0.3
+let densityDissipation = 0.93
+let velocityDissipation = 0.9
+let pressureDissipation = 0.8
+let curlStrength = 20
+let radius = 0.3
 
 const texelSize = { value: new Vec2(1 / simRes) }
 
@@ -404,6 +404,17 @@ gl.renderer.getExtension('OES_standard_derivatives')
 
 const lastMouse = new Vec2()
 
+const KEYS = {
+  37: 'left',
+  38: 'up',
+  39: 'right',
+  40: 'down',
+  65: 'a',
+  66: 'b',
+}
+
+const KONAMI = ['up', 'up', 'down', 'down', 'left', 'right', 'left', 'right', 'b', 'a']
+
 export class Canvas {
   constructor() {
     AutoBind(this)
@@ -426,6 +437,41 @@ export class Canvas {
     window.addEventListener('resize', this.onResize)
 
     this.onLoop()
+
+    this.isKonami = false
+    this.konamiCodePosition = 0
+
+    document.addEventListener('keydown', this.onKeydown.bind(this))
+  }
+
+  onKeydown({ keyCode }) {
+    const key = KEYS[keyCode]
+    const requiredKey = KONAMI[this.konamiCodePosition]
+
+    // compare the key with the required key
+    if (key == requiredKey) {
+      // move to the next key in the konami code sequence
+      this.konamiCodePosition++
+
+      // if the last key is reached, activate cheats
+      if (this.konamiCodePosition == KONAMI.length) {
+        this.activateCheats()
+
+        this.konamiCodePosition = 0
+      }
+    } else {
+      this.konamiCodePosition = 0
+    }
+  }
+
+  activateCheats() {
+    if (this.isKonami) {
+      densityDissipation = 0.93
+    } else {
+      densityDissipation = 0.99
+    }
+
+    this.isKonami = !this.isKonami
   }
 
   createScroll() {
