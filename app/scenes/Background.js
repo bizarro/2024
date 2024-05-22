@@ -5,6 +5,24 @@ import { getBounds } from '../utils/DOM'
 import fragment from '../shaders/media-fragment.glsl'
 import vertex from '../shaders/media-vertex.glsl'
 
+function roundRect(context, x, y, width, height, radius = 5) {
+  radius = { tl: radius, tr: radius, br: radius, bl: radius }
+
+  context.beginPath()
+  context.moveTo(x + radius.tl, y)
+  context.lineTo(x + width - radius.tr, y)
+  context.quadraticCurveTo(x + width, y, x + width, y + radius.tr)
+  context.lineTo(x + width, y + height - radius.br)
+  context.quadraticCurveTo(x + width, y + height, x + width - radius.br, y + height)
+  context.lineTo(x + radius.bl, y + height)
+  context.quadraticCurveTo(x, y + height, x, y + height - radius.bl)
+  context.lineTo(x, y + radius.tl)
+  context.quadraticCurveTo(x, y, x + radius.tl, y)
+  context.closePath()
+
+  context.stroke()
+}
+
 export class Background {
   constructor({ canvas, element, geometry, scene }) {
     this.canvas = canvas
@@ -33,10 +51,9 @@ export class Background {
     context.stroke()
     context.closePath()
 
-    context.beginPath()
-    context.roundRect(0, 0, this.bounds.width - 2, this.bounds.height - 2, 10)
-    context.stroke()
-    context.closePath()
+    context.lineWidth = 2
+
+    roundRect(context, 1, 1, this.bounds.width - 2, this.bounds.height - 2, 10)
 
     this.createImage(canvasBackground)
   }
@@ -48,7 +65,7 @@ export class Background {
       this.createMesh(image)
     }
 
-    image.src = canvas.toDataURL('image/webp', 1)
+    image.src = canvas.toDataURL('image/png', 1)
   }
 
   createMesh(image) {
