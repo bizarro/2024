@@ -11,6 +11,21 @@ canvas {
   }
 }
 
+html {
+  font-family: $font-primary;
+  font-size: calc(100vw / 1920 * 10);
+  overflow: hidden auto;
+
+  @include media('<=phone') {
+    font-size: calc(100vw / 320 * 10);
+  }
+}
+
+img:not([src]),
+video:not([src]) {
+  visibility: hidden;
+}
+
 [data-gl-media] {
   @include media('>phone') {
     &[data-gl-media-active] {
@@ -24,16 +39,6 @@ canvas {
     &[data-gl-text-active] {
       color: transparent;
     }
-  }
-}
-
-html {
-  font-family: $font-primary;
-  font-size: calc(100vw / 1920 * 10);
-  overflow: hidden auto;
-
-  @include media('<=phone') {
-    font-size: calc(100vw / 320 * 10);
   }
 }
 

@@ -17,7 +17,7 @@
 
 .project__header {
   border: 1px solid transparent;
-  border-radius: 0.5rem;
+  border-radius: 5px;
   display: flex;
   height: 59rem;
   justify-content: space-between;
@@ -137,7 +137,7 @@
 
 .project__media {
   aspect-ratio: 1920 / 1080;
-  border-radius: 0.5rem;
+  border-radius: 5px;
   display: block;
   overflow: hidden;
   position: relative;

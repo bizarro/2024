@@ -21,7 +21,7 @@
 
   @include media('<=phone') {
     border: 1px solid;
-    border-radius: 0.5rem;
+    border-radius: 5px;
     flex-direction: column;
     gap: 1.5rem;
     height: calc(100% - 2rem);
