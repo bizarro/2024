@@ -97,9 +97,10 @@
   @include media('<=phone') {
     bottom: 1rem;
     left: 1rem;
-    width: calc(100svh - 2rem);
+    max-height: 11rem;
     transform: rotate(90deg) translateX(-100%);
     transform-origin: bottom left;
+    width: calc(100svh - 2rem);
   }
 }
 
@@ -107,4 +108,8 @@
   @extend %cover;
 
   object-fit: cover;
+
+  @include media('<=phone') {
+    object-fit: contain;
+  }
 }
