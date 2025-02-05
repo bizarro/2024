@@ -69,7 +69,8 @@
 
   @include media('<=phone') {
     width: 50%;
-    &:first-child {
+
+    &:last-child {
       display: none;
     }
   }
