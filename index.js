@@ -36,6 +36,44 @@ app.get('/', (request, response) => {
   })
 })
 
+const { MailerSend, EmailParams, Sender, Recipient } = require('mailersend')
+
+const mailer = new MailerSend({
+  apiKey: process.env.MAILER_API_KEY,
+})
+
+app.post('/contact', async (request, response) => {
+  const from = new Sender(process.env.MAILER_FROM_EMAIL, process.env.MAILER_FROM_NAME)
+  const to = [new Recipient(process.env.MAILER_RECIPIENT_EMAIL, process.env.MAILER_RECIPIENT_NAME)]
+
+  const email = new EmailParams()
+    .setFrom(from)
+    .setTo(to)
+    .setSubject('Bizarro Inquiry')
+    .setHtml(
+      `
+      <strong>${request.body.subject} (${request.body.budget})</strong><br>
+      ${request.body.message}
+      <br>
+      <br>
+      <strong>${request.body.name}</strong><br>
+      ${request.body.email}
+    `,
+    )
+    .setReplyTo([new Sender(request.body.email, request.body.name)])
+
+  await mailer.email
+    .send(email)
+    .then(async () => {
+      return response.status(201).end()
+    })
+    .catch((error) => {
+      console.log(error)
+
+      return response.status(400).end()
+    })
+})
+
 app.listen(process.env.PORT || 3000)
 
 module.exports = app

@@ -1,0 +1,153 @@
+.inquiries {
+  @extend %cover;
+
+  background: $color-black;
+  left: 100%;
+  position: fixed;
+  transition: all 0.8s ease;
+  width: 50vw;
+  z-index: 1;
+
+  &:after {
+    background: rgba($color-black, 0.85);
+    content: '';
+    height: 100%;
+    opacity: 0;
+    position: absolute;
+    right: 100%;
+    transition: all 0.8s ease;
+    visibility: hidden;
+    width: 200vw;
+  }
+
+  &--active {
+    box-shadow: 0 0 10rem rgba($color-black, 0.5);
+    transform: translateX(-100%);
+
+    &:after {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+
+  @include media('<=phone') {
+    width: 100%;
+  }
+}
+
+.inquiries__form {
+  left: 50%;
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+}
+
+.inquiries__fields {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4rem;
+
+  @include media('<=phone') {
+    gap: 2rem;
+  }
+}
+
+.inquiries__field {
+  width: calc(50% - 2rem);
+
+  &:last-child {
+    width: 100%;
+  }
+
+  ::placeholder {
+    color: $color-white;
+  }
+
+  @include media('<=phone') {
+    width: 100%;
+  }
+}
+
+.inquiries__field__input {
+  appearance: none;
+  border-bottom: 1px solid;
+  font-size: 3rem;
+  height: 8rem;
+  line-height: 1.4;
+  width: 100%;
+
+  &--textarea {
+    height: 20rem;
+    resize: none;
+  }
+
+  @include media('<=phone') {
+    font-size: 2rem;
+    height: 4rem;
+
+    &--textarea {
+      height: 15rem;
+    }
+  }
+}
+
+.inquiries__button {
+  border: 0.2rem solid;
+  font-size: 3rem;
+  margin-top: 4rem;
+  padding: 2rem;
+  text-align: center;
+  transition: all 0.4s ease;
+  width: 100%;
+
+  &:hover {
+    background: $color-white;
+    color: $color-black;
+  }
+
+  @include media('<=phone') {
+    font-size: 2rem;
+    padding: 1rem;
+  }
+}
+
+.inquiries__close {
+  font-size: 0;
+  height: 5rem;
+  position: absolute;
+  right: 2rem;
+  top: 2rem;
+  width: 5rem;
+
+  &:before,
+  &:after {
+    background: $color-white;
+    content: '';
+    height: 4rem;
+    left: 50%;
+    position: absolute;
+    top: 50%;
+    width: 0.2rem;
+  }
+
+  &:before {
+    transform: translate(-50%, -50%) rotate(45deg);
+  }
+
+  &:after {
+    transform: translate(-50%, -50%) rotate(-45deg);
+  }
+
+  @include media('<=phone') {
+    height: 3rem;
+    right: 1rem;
+    top: 1rem;
+    width: 3rem;
+
+    &:before,
+    &:after {
+      height: 3rem;
+    }
+  }
+}
