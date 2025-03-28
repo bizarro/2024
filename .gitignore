@@ -9,3 +9,6 @@ data.json
 
 # Vercel
 .vercel
+
+# Environment
+.env
