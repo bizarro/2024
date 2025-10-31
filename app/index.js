@@ -15,5 +15,3 @@ if (window.innerWidth > BREAKPOINT_PHONE) {
     media.setAttribute('src', media.dataset.glMedia)
   })
 }
-
-onHashCheck()
