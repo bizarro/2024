@@ -12,3 +12,4 @@ data.json
 
 # Environment
 .env
+.env*.local
