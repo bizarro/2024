@@ -6,7 +6,9 @@ Luis Bizarro's portfolio from 2024. [Site of the Day on Awwwards at June 14, 202
 
 # Overview
 
-My previous portfolio was starting to feel outdated, so I wanted to create something fresh that highlights my best projects through videos and WebGL effects. I opted for a clean, simple approach, reusing a design originally crafted by my friend [Kacper Chlebowicz](https://kacper.ch/). The site features [OGL](https://github.com/oframe/ogl) for mouse fluid effects and [Lenis](https://lenis.darkroom.engineering/) for smooth scrolling, while the rest is built with plain JavaScript. Recently, I’ve been transitioning to my own framework and now use TypeScript across all my personal and commercial projects. However, I’m reserving this framework for future open-source endeavors.
+My previous portfolio was starting to feel outdated, so I wanted to create something fresh that highlights my best projects through videos and WebGL effects. I opted for a clean, simple approach, reusing a design originally crafted by my friend [Kacper Chlebowicz](https://kacper.ch/). The site features [OGL](https://github.com/oframe/ogl) for mouse fluid effects and [Lenis](https://lenis.darkroom.engineering/) for smooth scrolling.
+
+The site runs on the [Lisergia](https://lisergia.dev/) stack: TypeScript everywhere, [Preact](https://preactjs.com/) server-side rendering with [Elysia](https://elysiajs.com/) on a Cloudflare Worker, and a [Vite](https://vite.dev/)-based client build via `@lisergia/cli` (SCSS, GLSL and SVG sprites included). Static assets are served by Cloudflare Workers Static Assets.
 
 # Quick Start
 
@@ -14,9 +16,15 @@ My previous portfolio was starting to feel outdated, so I wanted to create somet
 # Clone the project.
 git clone https://github.com/bizarro/2024.git
 
-# Install npm depedencies.
-npm install
+# Install dependencies.
+bun install
 
-# Configure .env variables and run the website.
-npm start
+# Run the website (Vite dev server + wrangler dev).
+bun run dev
+
+# Type-check.
+bun run check-types
+
+# Deploy to Cloudflare.
+bun run deploy
 ```

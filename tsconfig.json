@@ -1,0 +1,16 @@
+{
+  "extends": "@lisergia/config-tsconfig/base.json",
+  "compilerOptions": {
+    "allowImportingTsExtensions": true,
+    "target": "esnext",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "jsx": "react-jsx",
+    "jsxImportSource": "preact",
+    "incremental": true,
+    "noEmit": true,
+    "resolveJsonModule": true,
+    "types": []
+  },
+  "include": ["**/*.ts", "**/*.tsx"],
+  "exclude": ["node_modules", "build"]
+}

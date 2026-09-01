@@ -1,0 +1,66 @@
+import styles from '../../build/bundle.css'
+
+const isDev = process.env.NODE_ENV !== 'production'
+
+export default function Head() {
+  return (
+    <>
+      <meta charset="utf-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, minimal-ui" />
+
+      <title>Luis Bizarro - Creative Technologist</title>
+
+      <link rel="canonical" href="https://bizar.ro/" />
+
+      <link
+        rel="preload"
+        href="/shared/fonts/fk-grotesk-neue-regular.woff2"
+        as="font"
+        type="font/woff2"
+        crossorigin="anonymous"
+      />
+
+      <meta
+        name="description"
+        content="Creative Technologist with focus on real-time 3D experiences using WebGPU and WebGL. Awwwards Independent of The Year 2021."
+      />
+
+      <meta property="og:type" content="website" />
+
+      <meta property="og:title" content="Luis Bizarro - Creative Technologist" />
+
+      <meta
+        property="og:description"
+        content="Creative Technologist with focus on real-time 3D experiences using WebGPU and WebGL. Awwwards Independent of The Year 2021."
+      />
+
+      <meta property="og:image" content="https://bizar.ro/shared/share.jpg" />
+
+      <meta name="twitter:card" content="summary_large_image" />
+
+      <meta name="twitter:title" content="Luis Bizarro - Creative Technologist" />
+
+      <meta
+        name="twitter:description"
+        content="Creative Technologist with focus on real-time 3D experiences using WebGPU and WebGL. Awwwards Independent of The Year 2021."
+      />
+
+      <meta name="twitter:image" content="https://bizar.ro/shared/share.jpg" />
+
+      {!isDev && <style dangerouslySetInnerHTML={{ __html: styles }}></style>}
+
+      <link rel="apple-touch-icon" sizes="180x180" href="/shared/favicon/apple-touch-icon.png" />
+
+      <link rel="icon" type="image/png" sizes="32x32" href="/shared/favicon/favicon-32x32.png" />
+
+      <link rel="icon" type="image/png" sizes="16x16" href="/shared/favicon/favicon-16x16.png" />
+
+      <link rel="manifest" href="/shared/favicon/site.webmanifest" crossorigin="use-credentials" />
+
+      <link rel="mask-icon" href="/shared/favicon/safari-pinned-tab.svg" {...{ color: '#000000' }} />
+
+      <meta name="msapplication-TileColor" content="#000000" />
+      <meta name="theme-color" content="#000000" />
+    </>
+  )
+}

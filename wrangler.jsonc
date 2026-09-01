@@ -1,0 +1,37 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "bizarro",
+  "main": "worker.ts",
+  "compatibility_date": "2026-08-29",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    "directory": "./build"
+  },
+  "rules": [
+    {
+      "type": "Text",
+      "globs": ["**/*.css"]
+    }
+  ],
+  "workers_dev": false,
+  "routes": [
+    {
+      "pattern": "bizar.ro",
+      "custom_domain": true
+    },
+    {
+      "pattern": "www.bizar.ro",
+      "custom_domain": true
+    },
+    {
+      "pattern": "webgl.dev",
+      "custom_domain": true
+    }
+  ],
+  "dev": {
+    "port": 8787
+  },
+  "observability": {
+    "enabled": true
+  }
+}

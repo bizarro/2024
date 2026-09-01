@@ -1,5 +1,5 @@
 # Build
-public
+build
 
 # Node
 node_modules
@@ -13,3 +13,9 @@ data.json
 # Environment
 .env
 .env*.local
+
+# TypeScript
+tsconfig.tsbuildinfo
+
+# Wrangler
+.wrangler
