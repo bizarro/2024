@@ -13,9 +13,9 @@
       "devDependencies": {
         "@biomejs/biome": "^2.5.11",
         "@cloudflare/workers-types": "^5.20260901.1",
-        "@lisergia/cli": "^25.0.0",
-        "@lisergia/config-tsconfig": "^25.0.0",
-        "@lisergia/utilities": "^25.0.0",
+        "@lisergia/cli": "^26.0.0",
+        "@lisergia/config-tsconfig": "^26.0.0",
+        "@lisergia/utilities": "^26.0.0",
         "@types/bun": "^1.3.14",
         "@types/lodash": "^4.17.21",
         "auto-bind": "^5.0.1",
@@ -181,11 +181,11 @@
 
     "@jridgewell/trace-mapping": ["@jridgewell/trace-mapping@0.3.9", "", { "dependencies": { "@jridgewell/resolve-uri": "^3.0.3", "@jridgewell/sourcemap-codec": "^1.4.10" } }, "sha512-3Belt6tdc8bPgAtbcmdtNJlirVoTmEb5e2gC94PnkwEW9jI6CAHUeoG85tjWP5WquqfavoMtMwiG4P926ZKKuQ=="],
 
-    "@lisergia/cli": ["@lisergia/cli@25.0.0", "", { "dependencies": { "@lisergia/config-tsconfig": "25.0.0", "autoprefixer": "^10.5.4", "dotenv": "^17.4.2", "postcss": "^8.5.26", "sass": "^1.103.1", "vite": "^8.2.2", "vite-plugin-glsl": "^1.6.1" }, "bin": { "lisergia": "index.js" } }, "sha512-WM0MCTIOuzR1d2HafExWalqRHDWB+h+k6aevrDP9zz+2v3fbn2VN7xyaLrFwlQ+Rs5+PSs/C5unP4vO3SwDr8w=="],
+    "@lisergia/cli": ["@lisergia/cli@26.0.0", "", { "dependencies": { "@lisergia/config-tsconfig": "26.0.0", "autoprefixer": "^10.5.4", "dotenv": "^17.4.2", "postcss": "^8.5.26", "sass": "^1.103.1", "vite": "^8.2.2", "vite-plugin-glsl": "^1.6.1" }, "bin": { "lisergia": "index.js" } }, "sha512-0IJ4KYbxSp4iRtuZY9uVo+yDWln2GqYSUOsnTpMIMxziUmWF/IegNu3pKiBQ/NKxtDmghxsKvap9uRSQZCPVaQ=="],
 
-    "@lisergia/config-tsconfig": ["@lisergia/config-tsconfig@25.0.0", "", {}, "sha512-0EoSVZMXwFtXoOeNCPAE6n8uAfJyRn9d2ct1L2XL8iz7MFU2vNoKaZAkTxB4bnAjDu+HsstRjuKtGffahqOiNA=="],
+    "@lisergia/config-tsconfig": ["@lisergia/config-tsconfig@26.0.0", "", {}, "sha512-aNFYesBY6Sp6QJa3aPCqVcYj5sOwiUpZfFMZr72W6URMvP+KQ99XqaaO0j29xynUZlHjoYdsyopRVjHRAoGD5A=="],
 
-    "@lisergia/utilities": ["@lisergia/utilities@25.0.0", "", { "dependencies": { "@lisergia/config-tsconfig": "25.0.0" } }, "sha512-VztOxzqrtGhVoKa6E3TVUDN7WBv0WSE462xurgZE+ZdqmL8oMeL6etYzeXD9syUG5W41aiUPbNct3TIttD4gHQ=="],
+    "@lisergia/utilities": ["@lisergia/utilities@26.0.0", "", { "dependencies": { "@lisergia/config-tsconfig": "26.0.0" } }, "sha512-AET28+Z/h5S629ZGyJVsyUTY5KMMe/mQWsREn55eMFpavPMIai1caI1lPMYmkyMCZjAzEPi9I+j2xyFmB8UmOA=="],
 
     "@oxc-project/types": ["@oxc-project/types@0.147.0", "", {}, "sha512-IJ3s6ltHLp45S0bh7phkX+gJO7A1Wuz2EaqpAhb8WjqDwbzMiWKHhyyT42tskaWjEYXtHtVCPpnBJVT9+dcRLg=="],
 

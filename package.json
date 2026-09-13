@@ -24,9 +24,9 @@
   "devDependencies": {
     "@biomejs/biome": "^2.5.11",
     "@cloudflare/workers-types": "^5.20260901.1",
-    "@lisergia/cli": "^25.0.0",
-    "@lisergia/config-tsconfig": "^25.0.0",
-    "@lisergia/utilities": "^25.0.0",
+    "@lisergia/cli": "^26.0.0",
+    "@lisergia/config-tsconfig": "^26.0.0",
+    "@lisergia/utilities": "^26.0.0",
     "@types/bun": "^1.3.14",
     "@types/lodash": "^4.17.21",
     "auto-bind": "^5.0.1",
